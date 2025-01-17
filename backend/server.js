@@ -6,7 +6,7 @@ import connectMongoDB from './db/connectToMongo.js';
 dotenv.config();
 const app = express()
 
-console.log(process.env.MONGO_URI);
+app.use(express.json()) // to parse req.body
 
 app.use("/api/auth", authRoutes)
 

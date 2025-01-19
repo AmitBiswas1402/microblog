@@ -1,6 +1,14 @@
 import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+// import dotenv from "dotenv";
+
+// dotenv.config();
+
+// const secretKey = process.env.JWT_SECRET;
+// if (!secretKey) {
+//   throw new Error("JWT_SECRET must be defined in environment variables");
+// }
 
 export const signup = async (req, res) => {
   try {
@@ -38,6 +46,7 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
+      // generateTokenAndSetCookie(newUser._id, res, secretKey);
       generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
 
@@ -62,20 +71,17 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const {username, password} = req.body;
     const user = await User.findOne({ username });
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user?.password || ""
-    );
-
-    if (!user || !isPasswordCorrect) {
-      return res.status(400).json({ error: "Inavalid username or password" });
+    const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
+    
+    if (!user ||!isPasswordCorrect) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    generateTokenAndSetCookie(newUser._id, res);
+    generateTokenAndSetCookie(user._id, res);
 
-    res.status(200).json({
+    res.json({
       _id: user._id,
       fullName: user.fullName,
       username: user.username,

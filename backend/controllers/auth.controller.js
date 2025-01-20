@@ -106,3 +106,11 @@ export const logout = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const getMe = (req, res) => {
+  try {
+      
+  } catch (error) {
+      
+  }
+}

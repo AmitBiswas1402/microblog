@@ -1,14 +1,5 @@
 import { generateTokenAndSetCookie } from "../lib/utils/generateToken.js";
 import User from "../models/user.model.js";
-import bcrypt from "bcryptjs";
-// import dotenv from "dotenv";
-
-// dotenv.config();
-
-// const secretKey = process.env.JWT_SECRET;
-// if (!secretKey) {
-//   throw new Error("JWT_SECRET must be defined in environment variables");
-// }
 
 export const signup = async (req, res) => {
   try {
@@ -46,7 +37,6 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
-      // generateTokenAndSetCookie(newUser._id, res, secretKey);
       generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
 
@@ -71,11 +61,14 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const {username, password} = req.body;
+    const { username, password } = req.body;
     const user = await User.findOne({ username });
-    const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
-    
-    if (!user ||!isPasswordCorrect) {
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+
+    if (!user || !isPasswordCorrect) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
@@ -107,10 +100,12 @@ export const logout = async (req, res) => {
   }
 };
 
-export const getMe = (req, res) => {
-  try {
-      
-  } catch (error) {
-      
-  }
-}
+export const getMe = async (req, res) => {
+	try {
+		const user = await User.findById(req.user._id).select("-password");
+		res.status(200).json(user);
+	} catch (error) {
+		console.log("Error in getMe controller", error.message);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+};

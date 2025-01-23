@@ -1,8 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.routes.js";
-import connectToMongo from "./db/connectToMongo.js";
 import cookieParser from "cookie-parser";
+
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
+import connectToMongo from "./db/connectToMongo.js";
 
 dotenv.config();
 
@@ -20,6 +22,7 @@ app.use(cookieParser());
 
 // Mount routes
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // Start the server
 app.listen(PORT, () => {

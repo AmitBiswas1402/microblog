@@ -95,5 +95,19 @@ export const getSuggestedUsers = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-  
+  const {fullName, email, username, currentPassword, newPassword, bio, link} = req.body;
+  let {profileImg, coverImg} = req.body;
+
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    
+  } catch (error) {
+    
+  }
 }

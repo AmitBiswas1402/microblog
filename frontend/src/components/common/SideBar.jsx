@@ -5,6 +5,8 @@ import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { Link } from "react-router";
 import { BiLogOut } from "react-icons/bi";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const data = {
@@ -12,6 +14,26 @@ const Sidebar = () => {
     username: "johndoe",
     profileImg: "/avatars/boy1.png",
   };
+
+  const {mutate, isPending, isError, error} = useMutation({
+    mutationFn: async() => {
+      try {
+        const res = await fetch("api/auth/user", {
+          method: "POST",
+        })
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to fetch user data");
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Logout successful");
+    }
+  })
 
   return (
     <div className="md:flex-[2_2_0] w-18 max-w-52">

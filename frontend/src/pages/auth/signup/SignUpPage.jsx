@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useState } from "react";
 
 import XSvg from "../../../components/svgs/X";
@@ -6,8 +7,6 @@ import { MdOutlineMail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import { Link } from "react-router";
-
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -29,15 +28,15 @@ const SignUpPage = () => {
           },
           body: JSON.stringify({ email, username, fullName, password }),
         });
-
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.error || "Failed to create account");
+        if (!res.ok) throw new Error(data.error);
+        if (data.error) {
+          throw new Error(data.error);
         }
         console.log(data);
         return data;
       } catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
       }
     },
@@ -114,7 +113,7 @@ const SignUpPage = () => {
             />
           </label>
           <button className="btn rounded-full btn-primary text-white">
-            {isPending ? "Loading..." : "Sign Up"}
+            {isPending ? "Loading..." : "Sign up"}
           </button>
           {isError && <p className="text-red-500">{error.message}</p>}
         </form>

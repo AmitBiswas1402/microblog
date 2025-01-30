@@ -15,7 +15,7 @@ const LoginPage = () => {
   });
 
   const {
-    mutate: loginMuation,
+    mutate: loginMutation,
     isPending,
     isError,
     error,
@@ -29,12 +29,9 @@ const LoginPage = () => {
           },
           body: JSON.stringify({ username, password }),
         });
-
         const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Failed to login");
-        }
+        if (!res.ok) throw new Error(data.error || "Something went wrong");
+        return data;
       } catch (error) {
         throw new Error(error);
       }
@@ -46,7 +43,7 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginMuation(formData);
+    loginMutation(formData);
   };
 
   const handleInputChange = (e) => {
